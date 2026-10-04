@@ -1,0 +1,145 @@
+@startuml Class Diagram - TCP Group Chat
+
+skinparam classBackgroundColor #f8f9ff
+skinparam classBorderColor #1a237e
+skinparam classHeaderBackgroundColor #1a237e
+skinparam classHeaderFontColor white
+skinparam ArrowColor #1a237e
+skinparam packageBackgroundColor #e8eaf6
+
+package "com.chat.server" {
+
+    class ServerApp {
+        +start(stage: Stage)
+        +main(args: String[])
+    }
+
+    package "model" {
+        class ServerModel {
+            -serverSocket: ServerSocket
+            -clients: Map<String, ClientHandler>
+            -running: boolean
+            -onLog: Consumer<String>
+            -onClientConnected: Consumer<String>
+            -onClientDisconnected: Consumer<String>
+            +start(port: int): void
+            +stop(): void
+            +getConnectedUsers(): List<String>
+            +setOnLog(cb): void
+            +setOnClientConnected(cb): void
+            +setOnClientDisconnected(cb): void
+            -broadcast(msg, sender): void
+            -broadcastToAll(msg): void
+        }
+
+        class ClientHandler {
+            -socket: Socket
+            -out: PrintWriter
+            -username: String
+            +run(): void
+            +sendMessage(msg: String): void
+            +getUsername(): String
+        }
+    }
+
+    package "view" {
+        class ServerView {
+            -logArea: TextArea
+            -userListView: ListView<String>
+            +buildAndShow(stage: Stage): void
+            +appendLog(msg: String): void
+            +addUser(username: String): void
+            +removeUser(username: String): void
+        }
+    }
+
+    package "controller" {
+        class ServerController {
+            -model: ServerModel
+            -view: ServerView
+            -port: int
+            +ServerController(model, view)
+            -loadConfig(): void
+            -bindCallbacks(): void
+            +startServer(): void
+            +stopServer(): void
+        }
+    }
+
+    ServerApp --> ServerModel
+    ServerApp --> ServerView
+    ServerApp --> ServerController
+    ServerController --> ServerModel
+    ServerController --> ServerView
+    ServerModel +-- ClientHandler
+}
+
+package "com.chat.client" {
+
+    class ClientApp {
+        +start(stage: Stage)
+        +main(args: String[])
+    }
+
+    package "model" {
+        class ClientModel {
+            -socket: Socket
+            -out: PrintWriter
+            -username: String
+            -readOnly: boolean
+            -connected: boolean
+            -onMessageReceived: Consumer<String>
+            -onStatusChange: Consumer<String>
+            -onDisconnected: Runnable
+            +connect(host, port, username): void
+            +sendMessage(text: String): void
+            +disconnect(): void
+            +isReadOnly(): boolean
+            +isConnected(): boolean
+            -listenLoop(): void
+            -handleServerMessage(raw): void
+        }
+    }
+
+    package "view" {
+        class ClientView {
+            -stage: Stage
+            -chatArea: TextArea
+            -inputField: TextField
+            -sendButton: Button
+            -statusLabel: Label
+            -statusDot: Circle
+            +setController(ctrl): void
+            +showLoginScreen(): void
+            +showChatScreen(readOnly, name): void
+            +appendMessage(msg): void
+            +setStatus(status): void
+            +onDisconnected(): void
+            +showError(msg): void
+        }
+    }
+
+    package "controller" {
+        class ClientController {
+            -model: ClientModel
+            -view: ClientView
+            -serverHost: String
+            -serverPort: int
+            +ClientController(model, view)
+            -loadConfig(): void
+            +connect(username: String): void
+            +overrideServer(host, port): void
+            +sendMessage(text): void
+            +disconnect(): void
+        }
+    }
+
+    ClientApp --> ClientModel
+    ClientApp --> ClientView
+    ClientApp --> ClientController
+    ClientController --> ClientModel
+    ClientController --> ClientView
+    ClientView --> ClientController
+}
+
+@enduml

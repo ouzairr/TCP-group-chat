@@ -1,0 +1,59 @@
+@startuml Deployment Diagram - TCP Group Chat
+
+skinparam nodeBackgroundColor #e8eaf6
+skinparam nodeBorderColor #1a237e
+skinparam artifactBackgroundColor #fff
+skinparam ArrowColor #1a237e
+
+node "Server Machine" as serverMachine {
+    artifact "TCPServer.jar" as serverJar {
+        component "ServerApp (JavaFX)" as serverUI
+        component "ServerController" as serverCtrl
+        component "ServerModel" as serverModel
+        component "ClientHandler (Thread)" as handler
+    }
+    interface "TCP :3000" as tcpPort
+    serverJar -- tcpPort
+}
+
+node "Client Machine A" as machineA {
+    artifact "TCPClient.jar" as clientA {
+        component "ClientApp (JavaFX)" as clientAUI
+        component "ClientController" as clientACtrl
+        component "ClientModel" as clientAModel
+    }
+}
+
+node "Client Machine B" as machineB {
+    artifact "TCPClient.jar" as clientB {
+        component "ClientApp (JavaFX)" as clientBUI
+        component "ClientController" as clientBCtrl
+        component "ClientModel" as clientBModel
+    }
+}
+
+node "Client Machine C" as machineC {
+    artifact "TCPClient.jar" as clientC {
+        component "ClientApp (JavaFX)" as clientCUI
+        component "ClientController" as clientCCtrl
+        component "ClientModel" as clientCModel
+    }
+}
+
+clientA --> tcpPort : TCP/IP Socket
+clientB --> tcpPort : TCP/IP Socket
+clientC --> tcpPort : TCP/IP Socket
+
+note right of tcpPort
+  Port configured in
+  server.properties /
+  client.properties
+end note
+
+note bottom of serverMachine
+  Thread-per-connection model:
+  Each client gets its own
+  ClientHandler thread
+end note
+
+@enduml

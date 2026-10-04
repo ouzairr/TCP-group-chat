@@ -1,0 +1,35 @@
+@startuml Sequence Diagram - Message Flow
+
+skinparam sequenceArrowColor #1a237e
+skinparam sequenceParticipantBackgroundColor #e8eaf6
+skinparam sequenceParticipantBorderColor #1a237e
+
+participant "Client A\n(ClientModel)" as CA
+participant "Server\n(ServerModel)" as S
+participant "Client B\n(ClientModel)" as CB
+participant "Client C\n(ClientModel)" as CC
+
+== Connection ==
+CA -> S: connect (TCP socket)
+CA -> S: send username "Alice"
+S --> CA: SERVER:WELCOME:Alice
+S --> CB: SERVER:JOIN:Alice
+S --> CC: SERVER:JOIN:Alice
+
+== Chat Message ==
+CA -> S: "Hello everyone!"
+S --> CB: "[10:30:01] Alice: Hello everyone!"
+S --> CC: "[10:30:01] Alice: Hello everyone!"
+note right of CA: own message echoed locally by ClientController
+
+== allUsers Command ==
+CA -> S: "allUsers"
+S --> CA: SERVER:USERS:Alice, Bob, Carol
+
+== Disconnection ==
+CA -> S: "bye"
+S --> CB: SERVER:LEAVE:Alice
+S --> CC: SERVER:LEAVE:Alice
+S -> CA: (close socket)
+
+@enduml
