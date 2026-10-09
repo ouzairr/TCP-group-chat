@@ -5,7 +5,7 @@ A real-time group chat system built with Java TCP Sockets and JavaFX, following 
 
 ---
 
-## 🏗️ Architecture Overview
+##  Architecture Overview
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -30,7 +30,7 @@ The **Model** (socket I/O) is **completely independent** of the **View** (JavaFX
 
 ---
 
-## ✨ Features
+##  Features
 
 ### Client
 - **Authentication / Identity**: Enter a username on the login screen before chatting.
@@ -48,7 +48,7 @@ The **Model** (socket I/O) is **completely independent** of the **View** (JavaFX
 
 ---
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 | Layer | Technology |
 |---|---|
@@ -60,7 +60,7 @@ The **Model** (socket I/O) is **completely independent** of the **View** (JavaFX
 
 ---
 
-## 🚀 Running the Application
+##  Running the Application
 
 ### Prerequisites
 - Java 17+
@@ -106,7 +106,7 @@ No recompilation needed — settings are loaded at runtime.
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 chat-app/
@@ -131,7 +131,7 @@ chat-app/
 
 ---
 
-## 🔌 Server-Client Protocol
+##  Server-Client Protocol
 
 | Message (Server → Client) | Meaning |
 |---|---|
@@ -150,13 +150,9 @@ chat-app/
 
 ---
 
-## 📐 UML Diagrams
+##  UML Diagrams
 
 See `/uml/` folder for:
 - **Class Diagram** – full MVC structure
 - **Deployment Diagram** – network topology
 
----
-
-## 👤 Author
-ouzair bouaouida
